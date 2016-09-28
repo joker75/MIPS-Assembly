@@ -1,0 +1,57 @@
+###############################
+# Homework 7 Program 3
+# This program alphabetizes the string given.
+# 
+# $t0 accesses the string
+# $t1 holds the smallest ASCII character value
+# $t2 holds the next charater
+#
+# Program made by:	Victor Nguyen
+############################################
+		.data
+string:	.asciiz "Hello, world!\n"
+
+		.text
+main:	la $t0, string 		# Load the address of the string
+							# into $t0
+		la $t7, string		# Holds the original string
+		
+comp:	lb $t1,0($t0)
+		lb $t2,1($t0)
+		beqz $t2,done		# If the new character is 0, we are done.
+		ble $t1,$t2,count	# If characters are in the correct order, get
+							# the next character.
+		jal rev				# Characters not in correct sequence;
+							# go to rearrangement routine.
+		j comp 				# When character is placed in correct
+							# position, get next character. 
+count: 	addi $t0,$t0,1 		# Increment current character address.
+		j comp 				# Compare next two characters.
+done: 	la $a0,string 		# When finished, print out the alphabetized
+		li $v0,4 			# string in correct order.
+		syscall
+		li $v0,10 			# Done; end program.
+		syscall
+		
+#######################################################
+# These recursion functions access the stack pointer to
+# reverse the numbers as well as potentially taking the 
+# smallest number from the end back to the beginning.
+#######################################################
+
+rev: 	sub $sp,$sp,4 		# Allocate space for stack
+		sw $ra,($sp) 		# Store contents of $ra on the stack
+		
+		sb $t1,1($t0)		# Exchange two character positions
+		sb $t2,0($t0)
+		beq $t0,$t7,goback 	# If at first position in the string, done
+		sub $t0,$t0,1 		# Decrement the letter pointer.
+		lb $t1,0($t0) 		# Compare letter to next "upstream" letter
+		lb $t2,1($t0)
+		ble $t1,$t2,goback 	# If letter is properly placed, done
+		jal rev 			# Not done yet; move back another position
+
+goback: addi $t0,$t0,1 		# Reverse done; move back to current position
+		lw $ra,($sp)
+		addi $sp,$sp,4
+		jr $ra			

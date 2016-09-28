@@ -1,0 +1,5 @@
+# Lecture 16 Program 2
+# Outputs each byte as a signed number
+
+		.text
+data1:	.space 1

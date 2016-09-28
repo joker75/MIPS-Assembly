@@ -1,0 +1,32 @@
+####################################
+# Test Review 3 Program 3
+# This loop program prints out eight
+# bytes of data onto the console.
+# $t0 holds the address of the data
+# $t1 is a counter from 0-7
+# $a0 holds the bytes to be printed
+#
+# Program made by: Victor Nguyen
+####################################
+	.data
+data1:	.word 0x327a2131
+data2:	.word 0x38413735
+
+		.text
+main:	la $t0, data1
+		li $v0, 11
+		
+loop:	beq $t1,8,end		# Stopping condition
+		lb $a0, 0($t0)
+		
+		blt $a0, 0x30, next	# Check for invalid bytes
+		bgt $a0, 0x39, next
+		
+		syscall				# Print
+		
+next:	addi $t0, $t0, 1
+		addi $t1, $t1, 1
+		j loop
+
+end:	li $v0, 10
+		syscall

@@ -1,0 +1,28 @@
+# Homework 6.2
+# ASCII Counter
+# $v0 system instruction	$t1 is the string pointer
+# $t0 stores the string		$a0 is the total (output)
+
+# 2.1 There are 14 total characters.
+
+
+	.data
+str:	.asciiz "Hello, world!\n"	# data initialization
+
+	.text
+main:	li $a0, 0		# Initialization since a0 is usually 
+						# initialized by the system at 2
+		li $v0, 1		# Prepare for output
+		la $t0, str		# load address of str into register t0
+loop:	lb $t1, 0($t0)	# load byte of memory address of
+						# register t0	
+		beqz $t1, end	# if the character at pointer is null (0)
+						# jump to the end
+		addi $a0, $a0, 1# Increment counter
+		addi $t0, $t0, 1# Increment pointer
+		j loop
+
+end:	syscall			# Output
+		
+		li $v0, 10		# End program
+		syscall

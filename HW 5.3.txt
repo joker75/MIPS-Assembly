@@ -1,0 +1,35 @@
+# Homework 5.3
+	.text
+main:	lw $t1, data1		# Data declaration
+	lw $t2, data2
+	lw $t3, data3
+	lw $t4, data4
+	lw $t5, data5
+	
+	sub $t6, $t1, $t2
+	add $t7, $t6, $t3
+	mul $t8, $t7, $t4
+	or $t9, $t8, $t5
+	mul $t0, $t9, -1	# Two's complement
+	sw $t0, ans
+
+	la $a0, str		# Output the string
+	li $v0, 4
+	syscall
+
+	move $a0, $t0,		# Output answer
+	li $v0, 1
+	syscall
+
+	li $v0, 10		# End program
+	syscall
+
+
+	.data
+str:	.asciiz "Answer= "
+data1:	.word 40
+data2:	.word 30
+data3:	.word 20
+data4:	.word 10
+data5:	.word 5
+ans:	.word 0

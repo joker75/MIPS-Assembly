@@ -1,0 +1,11 @@
+# Lecture 14 Program 3
+# Loops
+	.text
+main:	
+
+
+	.data
+num1:	.word 34527
+num2:	.word 98564
+num3:	.word 12953
+num4:	.word 68577

@@ -1,0 +1,55 @@
+# Lecture 17 Program 1
+## Alphabetizes a sequence of ASCII lower-case letters
+## and prints out the resulting alphabetized list.
+## Note that the list is made in the data declaration and
+## starts with all 26 letters of the alphabet in random order. 
+
+# $t0 is the pointer to the current position 
+# $t1 is the “upstream compare character” 
+# $t2 is the current character being analyzed
+# $t7 is the pointer to the first character in
+#  the string
+
+		.data
+string: .asciiz "qwertyuiopasdfghjklzxcvbnm"	# Characters to be
+												# alphabetized.
+		.text										
+main:	la $t0, string	# Load address of string in $t0
+		la $t7, string	# Load address of string into the 
+						#  register that'll check the beginning
+
+comp:	lb $t1,0($t0)
+		lb $t2,1($t0)
+		beqz $t2,done		# If the new character is 0, we are done.
+		ble $t1,$t2,count	# If characters are in the correct order, get
+							# the next character.
+		jal rev				# Characters not in correct sequence;
+							# go to rearrangement routine.
+		j comp 				# When character is placed in correct
+							# position, get next character. 
+count: 	addi $t0,$t0,1 		# Increment current character address.
+		j comp 				# Compare next two characters.
+done: 	la $a0,string 		# When finished, print out the alphabetized
+		li $v0,4 			# string in correct order.
+		syscall
+		li $v0,10 			# Done; end program.
+		syscall
+		
+# Character reverse routine follows
+rev: 	sub $sp,$sp,4 		# Store contents of $ra on the stack
+		sw $ra,($sp) 		# Decrement stack pointer.
+		sb $t1,1($t0)		# Exchange two character positions
+		sb $t2,0($t0)
+		
+		beq $t0,$t7,goback 	# If at first position in the string, done
+		sub $t0,$t0,1 		# Decrement the letter pointer.
+		lb $t1,0($t0) 		# Compare letter to next "upstream" letter
+		lb $t2,1($t0)
+		
+		ble $t1,$t2,goback 	# If letter is properly placed, done
+		jal rev 			# Not done yet; move back another position
+
+goback: addi $t0,$t0,1 		# Reverse done; move back to current position
+		lw $ra,($sp)
+		addi $sp,$sp,4
+		jr $ra				

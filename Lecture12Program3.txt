@@ -1,0 +1,21 @@
+# Lecture 12 Program 3
+# Load and Store Practice
+
+	.text
+main:	lw $t0, A	# load word A into t0
+	lw $t0, B	# load word B into t0
+	la $t1, C	# load address of C into t1
+	lw $t0, 0($t1)	# register-contents-plus offset-method
+	sw $t0, 4($t1)	# store word from C to D: 4 bytes from C to D
+	
+	lw $a0, D	# load contents of D into the output register $a0
+	li $v0, 1	# output
+	syscall
+	li $v0, 10	# end program
+	syscall
+
+	.data
+A:	.word 57	# location: 10 million 10 thousand 0
+B:	.word 23	# location: 10 million 10 thousand 4
+C:	.word 42	# location: 10 million 10 thousand 8
+D:	.word 0

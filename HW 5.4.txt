@@ -1,0 +1,25 @@
+# Homework 5.4	
+	.text
+main:	lw $t0, data1
+	lw $t1, data2
+		
+	bgez $t0, print1
+	j next
+
+print1: move $a0, $t0
+	li $v0, 1
+	syscall
+
+next:	bgez $t1, print2
+	j done
+
+print2: move $a0, $t1
+	li $v0, 1
+	syscall
+
+done: 	li $v0, 10
+	syscall
+
+	.data
+data1: .word 0x63f2e3
+data2: .word 0x9100ab72

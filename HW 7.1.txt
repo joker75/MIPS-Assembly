@@ -1,0 +1,88 @@
+#########################################################
+# Homework 7 Program 1
+# This program reorders the list of decimal 
+# numbers in an ascending order. 0 is the
+# stopping condition.
+#
+# A stack pointer will be useful here since we can
+# perform data swaps.
+#
+# $t0 accesses the data memory addresses starting at num1
+# $t1 is the smallest number
+# $t2 is the next number to be compared
+# $t3 is the same as $t1, but $t3 checks for the first  
+# position of the data address (0x10010000)
+# $t4 checks for 0
+# Program made by:	Victor Nguyen
+#########################################################
+
+		.data
+num1:	.word 53875			# Answer:
+num2:	.word 36429			# 25153 (0x6241)
+num3:	.word 88641			# 36429 (0x8E4D)
+num4:	.word 95437			# 42398 (0xA59E)
+num5:	.word 25153			# 53875 (0xD273)
+num6:	.word 42398			# 88641 (0x15A41)
+num7:	.word 0				# 95437 (0x174CD)
+		
+		.text
+main:	la $t0, num1		# Loads the data address of num1 into $t0
+		la $t3, num1		# Holds the starting point
+		
+comp:	lw $t1, 0($t0)		# Assume the first number is the smallest	
+		lw $t2, 4($t0)		# Get the next number
+							
+		beqz $t2, end		# End the program when the next number is 0
+		ble $t1, $t2, count	# If the two numbers are in the ascending order
+							#  Continue to the next pair
+		jal rev				# Numbers are in the wrong order
+							#  Switch them
+		j comp				# Continue comparing
+
+count:	addi $t0, $t0, 4	# Increment to next address
+		j comp				# Continue
+
+end:	lw $t4, 0($t3)
+		beqz $t4,term
+		move $a0, $t4
+		li $v0, 1			# Ready the program for integer output
+		syscall
+		
+		li $a0, 0xa			# Carriage return, '\n'
+		li $v0, 11
+		syscall
+		
+		lw $t4, 0($t3)		# $t4 looks for 0 (num7)
+		addi $t3, $t3, 4	# Increment to the next number
+		bnez $t4, end		# If the word is not equal to 0 
+							#  (i.e. not the last word),
+							#  repeat this output loop
+term:	li $v0, 10			# Otherwise, end the program
+		syscall
+		
+		
+#######################################################
+# These recursion functions access the stack pointer to
+# reverse the numbers as well as potentially taking the 
+# smallest number from the end back to the beginning.
+#######################################################
+
+rev: 	sub $sp,$sp,4 		# Allocate room for the stack pointer
+		sw $ra,($sp) 		# Store contents of $ra on the stack
+		
+		sw $t1,4($t0)		# Exchange two number positions
+		sw $t2,0($t0)
+		
+		lw $t1,0($t0) 		# Compare previous numbers
+		lw $t2,4($t0)
+		
+		beq $t0,$t3,goback 	# If at first position in the string, done
+		sub $t0,$t0, 4 		# Decrement the address pointer.
+		
+		
+		ble $t1,$t2,goback 	# If number is properly placed, done
+		jal rev 			# Not done yet; move back another position
+
+goback: lw $ra,($sp)
+		addi $sp,$sp,4
+		jr $ra

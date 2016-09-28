@@ -1,0 +1,30 @@
+# Test Review #2 Program 1
+# Mathmatical Compution
+# $t0 = data1		$t1 = data2
+# $t2 = data3		$t3 = data4
+
+	.data
+data1:	.word 49583
+data2:	.word 21758
+data3:	.word 0
+data4:	.word 0
+
+		.text
+main:	lw $t0, data1
+		lw $t1, data2
+		
+		mul $t2, $t0, $t0	# Square data1
+		sw $t2, data3		# Store in data3
+		mul $t3, $t1, $t1	# Square data2
+		sw $t3, data4		# Store in data4
+		
+		and $a0, $t2, $t3	# AND data3 and data4
+		or $a0, $a0, $t0	# OR result with data1
+		xor	$a0, $a0, $t1	# XOR result with data2
+		neg	$a0, $a0		# Two's complement
+							
+		li $v0, 1			# Output
+		syscall
+		li $v0, 10			# End
+		syscall
+		

@@ -1,0 +1,28 @@
+# Lecture 17 Program 2
+#  The program searches for the largest hexadecimal value character
+# in the string. It'll output said character to the console.
+# $a0 holds the largest hex character
+# $t0 holds the string
+# $t1 holds the next character
+
+		.data
+str:	.asciiz "Hello,world!\n"		
+
+		.text
+main:	la $t0, str		# Load the byte of the string into $t0
+		lb $t1, 0($t0)	# Assume the largest character is the first
+
+loop:	lb $t2, 1($t0)			# Get the next character
+		beqz $t2, end			# If the string reaches the null terminator (0),
+								#  end the program.
+		bge $t1, $t2, next		# If $t1 > $t2, repeat
+		move $t1, $t2			# Else ($t1 < $t2) swap and repeat
+next:	addi $t0, $t0, 1		# Increment to the next character
+		j loop	
+		
+end:	move $a0, $t1
+		li $v0, 1			# Outputs the largest hex 
+		syscall				#  character as a decimal number
+		
+		li $v0, 10			# End
+		syscall

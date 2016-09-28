@@ -1,0 +1,38 @@
+# Homework 6.3
+# Print out ASCII characters in reverse order using stacks
+# $t0 contains the word			$t1 contains the memory address of 10 mil. 10 thou.
+# $t2 is the counter			$a0 contains the next word in the stack
+
+# 3.1 UTD!
+
+	.data
+num1:	.word 0x21
+num2:	.word 0x44
+num3:	.word 0x54
+num4:	.word 0x55
+	
+		.text
+main:	li $t2, 0				# Counter starts at 0
+		la $t1, num1			# Store the memory address of num1 into $t1
+		
+loop:	lw $t0, 0($t1)			# Load the contents of $t1 into $t0
+		
+		addi $t1, $t1, 4		# Add 4 to access the next memory address
+		addi $sp, $sp, -4		# PUSH! Make space for the stack pointer
+		sw $t0, 0($sp)			# Store the contents of $t0 into the stack
+		add $t2, $t2, 1			# Increment counter
+		
+		beq $t2, 4, print		# If the counter reaches 4 (meaning stack complete), 
+								#  execute print
+		j loop					# Else, repeat
+		
+print:	lw $a0, 0($sp)			# POP! Load the word into a register for output
+		li $v0, 11
+		syscall
+							
+		addi $sp, $sp, 4		# POP! Remove the space for the recently loaded word
+		addi $t2, $t2, -1		# Decrement the counter
+		
+		bnez $t2, print			# If the counter is NOT 0, continue printing
+		li $v0, 10				# End
+		syscall

@@ -1,0 +1,22 @@
+# Lecture 15 Program 2
+# A pointer looks for the lower case characters in a string
+	.data
+str:	.asciiz "ab12Cd"
+
+	.text
+main:	li $v0, 11
+	la $t0, str		# load address of str into register t0
+loop:	lb $a0, 0($t0)		# load byte of memory address of register t0
+				# (pointer)
+	beqz $a0, End		# if the character at pointer is null (0)
+				# jump to the end
+	blt $a0, 0x61, next	# < 0x61 (a)
+	bgt $a0, 0x7a, next	# > 0x7a (z)
+	syscall 		# Else output
+
+next: 	addi $t0, $t0, 1	# Move pointer
+	j loop 			# Back to loop
+
+
+End:	li $v0, 10		# End program
+	syscall

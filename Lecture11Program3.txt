@@ -1,0 +1,14 @@
+	.text
+main:	li $t0, 22	
+	li $t1, 15
+	li $t2, 7
+	li $t3, 18
+
+	mul $s0, $t0, $t1
+	mul $s1, $t2, $t3
+	mul $a0, $s0, $s1
+	
+	li $v0, 1		# output
+	syscall
+	li $v0, 10		# end program
+	syscall		

@@ -1,0 +1,11 @@
+	.text
+main:	li $t0, 0x123		# w = 4x^2 + 8y + z
+	li $t1, 0x12by7
+	li $t2, 0x34af7
+	mul $t3, $t0, $t0
+	mul $t3, $t3, 4
+	mul $t4, $t1, 8
+	add $s0, $s0, $t4
+	add $s0, $t2, $s0
+	li $v0, 10		# end program
+	syscall

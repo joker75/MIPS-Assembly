@@ -1,0 +1,16 @@
+	.text			# Output the largest number
+main:	li $t0, 1
+	li $t1, 11
+	li $t2, 33
+	ble $t0, $t1, next	# If t0 <= t1, move to next
+	bge $t0, $t2, print	# If t0 >= t2, print
+
+next:	move $t0, $t1		# Move contents of t1 to t0
+	bge $t0, $t2, print	# If t2 >= t0, move to print
+	move $t0, $t2		# Else, t2 has the largest number
+	
+print:	move $a0, $t0
+	li $v0, 1		# Output
+	syscall
+	li $v0, 10		# End program
+	syscall

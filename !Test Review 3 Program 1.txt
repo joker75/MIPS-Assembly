@@ -1,0 +1,43 @@
+############################################
+# Test Review 3 Program 1
+# This program prints out the ASCII bytes of 
+# capital letters, commas, spaces, and 
+# exclamation points in the data memory. 
+# 0 will stop the loop.
+#
+# Program made by: Victor Nguyen
+############################################
+	.data
+aa:	.word 0x30557b6a
+bb:	.word 0x54396162
+cc:	.word 0x7a743844
+dd: .word 0x67372079
+ee: .word 0x71724561
+ff: .word 0x32334366
+gg: .word 0x3579457b
+hh: .word 0x3921777a
+ii: .word 0
+
+		.text
+main:	la $t0, aa
+		li $v0, 11			# Ready the output
+		
+repeat:	lb $a0, 0($t0)		# Load the byte for output
+		beqz $a0, end		# End program if the byte = 0
+
+# Input validation
+space:	beq $a0,0x20, output# Checks for spaces
+excl:	beq $a0,0x21, output# Checks for exclamation points
+commas:	beq $a0,0x2c, output# Checks for commas
+
+lower:	blt $a0,0x41, next	# Checks for characters below A (0x41)
+upper:	bgt $a0,0x5A, next	# Checks for characters above Z (0x5A)
+
+output:	syscall
+		j next
+		
+next:	addi $t0, $t0, 1	# Move to the next memory
+		j repeat			# Repeat
+		
+end:	li $v0, 10
+		syscall

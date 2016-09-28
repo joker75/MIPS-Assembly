@@ -1,0 +1,22 @@
+	.text
+main:	la $t1, chars
+	lb $a0, 0($t1)		# Pointer at $t1
+	li $v0, 11		# Print the first character
+	syscall
+	
+	ror $t1, $t1, 1		# Rotate 8 bits
+		
+	li $a0, 0x0a		# New line character
+	li $v0, 11		# and syscall
+	syscall
+
+	lb $a0, 0($t1)		# Pointer at $t1
+	li $v0, 11		# Print the first character
+	syscall
+	
+	li $v0, 10		# End program
+	syscall
+	
+
+	.data
+chars:	.word 0x21445455

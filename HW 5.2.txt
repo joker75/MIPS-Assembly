@@ -1,0 +1,30 @@
+# Homework 5.2
+	.text
+main:	lw $t0, t
+	lw $t1, u
+	or $t2, $t0, $t1
+	sw $t2, x		# store OR of u & t into x
+
+	lw $t3, v
+	lw $t4, w
+	xor $t5, $t3, $t4	
+	sw $t5, y		# store XOR of v & w into y
+
+	add $t6, $t2, $t5
+	mul $a0, $t2, $t5
+	mul $a0, $a0, $t6
+
+	li $v0, 1		# Output the number
+	syscall
+
+	li $v0, 10		# End program
+	syscall 
+
+	.data
+t:	.word 100
+u:	.word 54
+v:	.word 37
+w:	.word 23
+x:	.word 0
+y:	.word 0
+z:	.word 0

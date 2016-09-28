@@ -1,0 +1,39 @@
+# Test Review #2 Program 4
+# Outputs the positive data words
+	
+	.data
+n:	.word 0x9750494d
+p:	.word 0x20697320
+q:	.word 0x61207573
+r:	.word 0x6566756c
+s:	.word 0x9073696d
+t: 	.word 0x00000000
+u:	.word 0x6f722066
+v:	.word 0x6f72206c
+w:	.word 0xff61726e
+x:	.word 0x696e6720
+y:	.word 0x8d495053
+z:	.word 0x20617373
+
+		.text
+main:	la $t0, n			# Load memory address of n into $t0	
+				
+loop:	beq $t2, 11, end	# If the counter reaches its 12th comparison,
+							#  end the program
+		lw $a0, 0($t0)		# Load the current word into the output register
+		addi $t0, $t0, 4	# Move to the next data memory address by 4 bytes
+		addi $t2, $t2, 1	# Increment counter
+		bgtz $a0, print		# If the number is positive, print it
+		j loop				# Else, continue the loop
+		
+print: 	li $v0, 1			# Output
+		syscall
+		
+		li $a0, 0x0a		# New line
+		li $v0, 11			# syscall 11 prints out ASCII characters
+		syscall
+		
+		j loop				# Continue loop
+	
+end: 	li $v0, 10			# End the program
+		syscall

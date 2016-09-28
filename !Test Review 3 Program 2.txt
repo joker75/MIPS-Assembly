@@ -1,0 +1,92 @@
+#############################################
+# Test Review 3 Program 2
+# This program calculates the factorials of
+# 1 to 12 based on the user input. This 
+# program will validate the input from the
+# user as well as reprompt the user to try
+# again.
+# $t0 holds the input that will be validated;
+# if valid, $t0 will also calculate the
+# factorial
+# $t1 will hold the validated input from the 
+# user
+# Program made by: Victor Nguyen
+#############################################
+		.data
+str:	.asciiz "\nPlease input a whole number between 0 and 12 (inclusive):\n"
+str2:	.asciiz	"Bad number. Starting Over.\n\n"
+str3:	.asciiz " factorial is "
+str4:	.asciiz "\nDo another factorial (y=yes)? Any other input will end the program.\n"
+str5:	.asciiz "\nSystem close. Thank you for using the program!"
+num:	.word 0
+ans:	.word 0
+
+		.text
+main: 	la $a0, str		# Prompt the user
+		li $v0, 4
+		syscall
+		
+input:	li $v0,5		# Receive integer
+		syscall
+		
+valid:	blt $v0,0,bad	# If invalid, reprompt the user
+		bgt $v0,12,bad	
+		
+		sw $v0, num		# Save the number
+		lw $a0, num		# Load into the manipulation register
+		
+		jal fact		# If valid, continue 
+						# to the next part of 
+						# the program
+		sw $v0, ans		# Save the answer from $v0 into ans
+
+results:lw $a0, num		# Output the user's input
+		li $v0, 1
+		syscall
+		la $a0, str3	# Output the leader
+		li $v0, 4
+		syscall
+		lw $a0, ans		# Output the answer
+		li $v0, 1
+		syscall
+
+reprompt:la $a0, str4	# Output the reprompt
+		li $v0, 4
+		syscall
+		li $v0, 12		# Reads a character
+		syscall
+		beq $v0,0x79, main	# If == 'y', return to main
+
+end:	la $a0, str5
+		li $v0, 4
+		syscall
+		li $v0, 10			# Else, end
+		syscall
+		
+bad:	la $a0, str2	# Notify the user of invalid input
+		li $v0, 4
+		syscall
+		j main			# Start over
+
+#------------------------------------------------------------		
+fact:	subu $sp, $sp, 8	# Make room
+		sw $ra, ($sp)
+		sw $s0, 4($sp)
+		
+		# Base case
+		li $v0, 1	
+		beqz $a0,done		# If == 0, stop the recursion
+							# $a0 acts as a counter
+		# n*(n-1)*(n-2)
+		move $s0, $a0
+		sub $a0, $a0, 1
+		jal fact
+		
+		# The magic happens here
+		mul $v0, $s0, $v0
+		
+done:	lw $ra, ($sp)		
+		lw $s0, 4($sp)
+		addu $sp, $sp, 8
+		
+		jr $ra

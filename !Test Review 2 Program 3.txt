@@ -1,0 +1,20 @@
+# Test Review #2 Program 3
+# $t0 access the words in memory	$a0 outputs the word
+	.data
+w1:	.word 0x6c6c6548
+w2:	.word 0x77202c6f
+w3:	.word 0x646c726f
+w4:	.word 0x00000021
+
+		.text
+main:	la $t0, w1
+		li $v0, 11			# Ready the output
+		
+repeat:	lb $a0, 0($t0)		# Load the byte for output
+		beqz $a0, end		# End program if the byte = 0
+		syscall
+		addi $t0, $t0, 1	# Move to the next memory
+		j repeat			# Repeat
+
+end:	li $v0, 10
+		syscall

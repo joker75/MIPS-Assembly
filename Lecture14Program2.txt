@@ -1,0 +1,66 @@
+# Lecture 14 Program 2
+# Reversing the order of a string
+# of numbers using the stack
+
+	.text
+main:	lw $t0, num1
+	sub $29, $29, 4
+	sw $t0, 0($29)		# num1 is now on stack
+	
+	lw $t0, num2
+	sub $29, $29, 4
+	sw $t0, 0($29)		# num2 is now on stack
+	
+	lw $t0, num3
+	sub $29, $29, 4
+	sw $t0, 0($29)		# num3 is now on stack
+	
+	lw $t0, num4
+	sub $29, $29, 4
+	sw $t0, 0($29)		# num4 is now on stack
+	
+	lw $a0, ($29)		# Output num4
+	li $v0, 1		
+	syscall  		
+		
+	li $v0, 11		# New-line character
+	li $a0, 0x0a
+	syscall
+
+	add $29, $29, 4
+	lw $a0, ($29)		# Output num3
+	li $v0, 1
+	syscall  
+		
+	li $v0, 11		# New-line character
+	li $a0, 0x0a
+	syscall
+
+
+	add $29, $29, 4
+	lw $a0, ($29)		# Output num2
+	li $v0, 1
+	syscall  
+		
+	li $v0, 11		# New-line character
+	li $a0, 0x0a
+	syscall
+
+
+	add $29, $29, 4
+	lw $a0, ($29)		# Output num1
+	li $v0, 1
+	syscall  
+		
+	li $v0, 11		# New-line character
+	li $a0, 0x0a
+	syscall
+
+	li $v0, 10		# End program
+	syscall
+
+	.data
+num1:	.word 3452711
+num2:	.word 98564
+num3:	.word 12953
+num4:	.word 68577

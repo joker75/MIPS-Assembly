@@ -1,0 +1,27 @@
+# Homework 6.1
+# Loops
+# $t0 contains the hex number	#t1 holds the memory address
+# $a0 holds the current hex value that'll be stored
+
+# 1.1 The memory addresses of w, x, y and z: 0x10010000, 0x10010004, 0x10010008, 0x1001000c
+# 1.2 By shifting the contents within register $t1, the upper most bits will be replaced by 0;
+#  thus, the only condition to check for is when the contents are exactly 0.
+	.data
+w: 	.word 0
+x:	.word 0
+y:	.word 0
+z:	.word 0
+
+		.text
+main:	li $t0, 0x73a8ef64
+		la $t1, w				# Store at memory address starting at w	
+
+loop:	and $a0, $t0, 0xff		# Masking
+		srl $t0, $t0, 8			# Shifts the contents of $t0 to the right 8 bits
+		sw $a0, 0($t1)			# Store the new word into the current memory address
+		addi $t1, $t1, 4		# Add 4 to access the next memory address
+		beqz $t0, end			# End the program when the hex number is done
+		j loop					# Else repeat
+		
+end:	li $v0, 10
+		syscall

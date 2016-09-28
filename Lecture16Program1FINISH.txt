@@ -1,0 +1,67 @@
+# Lecture #16 Program 1
+# This program converts a number (8 digits max) from the keyboard 
+#  into a hexadecimal number.
+# $t0 is a loop counter					$t1 holds the number
+# $a0 holds the hexadecimal number
+# ASCII = n + 48
+
+		.data
+ask:	.asciiz "Please input a number (8 digits max): "
+ans:	.asciiz "The hexadecimal conversion is: 0x"
+next:	.asciiz "Please input another number (y/n): "
+
+		.text
+main:	la $v0, ask		# Prompts the user
+		li $a0, 4
+		syscall
+		
+		li $v0, 5		# Receives integer input
+		syscall			#  from keyboard
+		move $t1, $v0	# Move input to $t1
+
+		la $a0, ans		# Answer header
+		li $v0, 4
+		syscall
+		
+		move $t0, $0	# Clears counter
+		li $v0, 11		# System call to print chars
+
+elim:	rol $t1, $t1, 4		# Left rotate digits to
+							#  right-most position
+		andi $t1, $t1, 0xf	# Masking left-most digits
+		
+		bgtz $a0, num		# If non-zero, proceed to
+							#  character conversion
+		addi $t0, $t0, 1	# Since char is 0, increment counter
+		beq $t0, 8, zero	# If 8 zeroes, loop done; go to print
+		j elim
+		
+loop:	rol $t1, $t1, 4		# Left rotate left digit to
+		and $a0, $t1, 0xf	#  right-most position
+		
+num:	ble $a0, 9, conv	# Go to conv routine directly if hex #0-9
+		addi $a0, $a0, 7	# Add 7 becuse hex number is a-f
+		
+conv:	add $a0, $a0, 48	# Output ASCII representation of hex number
+		syscall
+		addi $t0, $t0, 1	# Increment counter
+		
+		blt $t0, 8, loop	# If analysis incomplete, continue
+		j end				# Analysis complete
+
+end:	li $a0, 0x0a		# New line
+		syscall
+		
+		la $a0, next		# Prompt user for more input
+		li $v0, 4
+		syscall
+
+		li $a0, 0x0a		# New line
+		li $v0, 11
+		syscall
+		
+		li $v0, 12
+		syscall
+		beq $v0, 0x79, main	# If yes (y), start over
+		li $v0, 10			# Else, end
+		syscall

@@ -1,0 +1,29 @@
+# Lecture 15 Program 4
+# numbers = 0x30 - 0x39
+# lower case letters = 0x61 - 0x7a
+
+	.data
+number: .asciiz "1234abcdEF56GJi89"
+
+	.text
+main:	li $v0, 11
+	la $t0, number		# load address of number into $t0
+
+loop:	lb $a0, 0($t0)		# load byte of $t0 into $a0
+				# pointer notation
+	beqz $a0, End		# Jump to the end
+	blt $a0, 0x30, next
+	bgt $a0, 0x39, letters	# Jump to the letter function
+	syscall
+	j next
+
+letters:blt $a0, 0x61, next	# < 0x61
+	bgt $a0, 0x7a, next	# > 0x7a
+	syscall
+	j next
+
+next: 	addi $t0, $t0, 1	# Move pointer
+	j loop			# Back to main
+
+End:	li $v0, 10		# End program
+	syscall
